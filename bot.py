@@ -46,9 +46,6 @@ async def neko():
 
     channel = bot.get_channel(839250460522577940)
     
-    message = await channel.send(image)
-    await message.add_reaction(bot.get_emoji(839961477737349150))
-
     if bot.cat_house == '':
         bot.cat_house = image
         message = await channel.send(image)
