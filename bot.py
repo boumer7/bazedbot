@@ -14,8 +14,17 @@ file_cfg = open("token.json")
 cfg = json.load(file_cfg)
 file_cfg.close()
 
+bot.groups = ['-183416023', '-179926480', '-152424758', '-182044990']
+
 bot.nekoarchive_previous_link = ''
+bot.nekoarchive_arr = []
+
 bot.nekochan_previous_link = ''
+bot.nekochan_heart_arr = []
+
+bot.nekochan_meow = ''
+bot.nekochan_meow_arr = []
+
 bot.meduza_text = ''
 
 @bot.event
@@ -23,10 +32,11 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="Самый базированный бот"))
     print(bot.user.name, "в сети!")
 
+async def send_data():
+
 @tasks.loop(hours=1)
 async def neko():
-    
-    # кошачий домик на краю
+
     r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -183416023, "count": 2, "offset": 0,
     "access_token": cfg["vk_token"], "v": "5.130"})
 
@@ -47,35 +57,129 @@ async def neko():
     image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
     image = image[1:-1]
 
-    if bot.nekoarchive_previous_link == '':
-        bot.nekoarchive_previous_link = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.nekoarchive_previous_link == image:
-        pass
-    elif bot.nekoarchive_previous_link != image:
-        bot.nekoarchive_previous_link = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
+    if len(data["response"]["items"][0]["attachments"]) > 1:
+        if len(bot.nekoarchive_arr) == 0:
+            for i in data["response"]["items"][0]["attachments"]:
+                bot.nekoarchive_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            for i in bot.nekoarchive_arr:
+                message = await channel.send(i)
+                await message.add_reaction(bot.get_emoji(839961477737349150))
+
+        elif len(bot.nekoarchive_arr) > 0:
+            current_arr = []
+
+            for i in data["response"]["items"][0]["attachments"]:
+                current_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            if current_arr == bot.nekoarchive_arr:
+                pass
+            else:
+                for i in bot.nekoarchive_arr:
+                    message = await channel.send(i)
+                    await message.add_reaction(bot.get_emoji(839961477737349150))
+    else:
+
+        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+        image = image[1:-1]
+
+        if bot.nekoarchive_previous_link == '':
+            bot.nekoarchive_previous_link = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
+        elif bot.nekoarchive_previous_link == image:
+            pass
+        elif bot.nekoarchive_previous_link != image:
+            bot.nekoarchive_previous_link = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
 
     # nekochan <3
     r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -152424758, "count": 2, "offset": 0,
     "access_token": cfg["vk_token"], "v": "5.130"})
 
     data = r.json()
-    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
 
-    if bot.nekochan_previous_link == '':
-        bot.nekochan_previous_link = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.nekochan_previous_link == image:
-        pass
-    elif bot.nekochan_previous_link != image:
-        bot.nekochan_previous_link = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
+    if len(data["response"]["items"][0]["attachments"]) > 1:
+        if len(bot.nekochan_heart_arr) == 0:
+            for i in data["response"]["items"][0]["attachments"]:
+                bot.nekochan_heart_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            for i in bot.nekochan_heart_arr:
+                message = await channel.send(i)
+                await message.add_reaction(bot.get_emoji(839961477737349150))
+
+        elif len(bot.nekochan_heart_arr) > 0:
+            current_arr = []
+
+            for i in data["response"]["items"][0]["attachments"]:
+                current_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            if current_arr == bot.nekochan_heart_arr:
+                pass
+            else:
+                for i in bot.nekochan_heart_arr:
+                    message = await channel.send(i)
+                    await message.add_reaction(bot.get_emoji(839961477737349150))
+    else:
+
+        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+        image = image[1:-1]
+
+        if bot.nekochan_previous_link == '':
+            bot.nekochan_previous_link = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
+        elif bot.nekochan_previous_link == image:
+            pass
+        elif bot.nekochan_previous_link != image:
+            bot.nekochan_previous_link = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
+
+    # -182044990 nekochan_meow
+
+    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -182044990, "count": 1, "offset": 0,
+    "access_token": cfg["vk_token"], "v": "5.130"})
+
+    data = r.json()
+
+    if len(data["response"]["items"][0]["attachments"]) > 1:
+        if len(bot.nekochan_meow_arr) == 0:
+            for i in data["response"]["items"][0]["attachments"]:
+                bot.nekochan_meow_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            for i in bot.nekochan_meow_arr:
+                message = await channel.send(i)
+                await message.add_reaction(bot.get_emoji(839961477737349150))
+
+        elif len(bot.nekochan_meow_arr) > 0:
+            current_arr = []
+
+            for i in data["response"]["items"][0]["attachments"]:
+                current_arr.append(i["photo"]["sizes"][-1]["url"])
+
+            if current_arr == bot.nekochan_meow_arr:
+                pass
+            else:
+                for i in bot.nekochan_meow_arr:
+                    message = await channel.send(i)
+                    await message.add_reaction(bot.get_emoji(839961477737349150))
+    else:
+
+        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+        image = image[1:-1]
+
+        if bot.nekochan_meow == '':
+            bot.nekochan_meow = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
+        elif bot.nekochan_meow == image:
+            pass
+        elif bot.nekochan_meow != image:
+            bot.nekochan_meow = image
+            message = await channel.send(image)
+            await message.add_reaction(bot.get_emoji(839961477737349150))
 
 
 @tasks.loop(hours=1)
