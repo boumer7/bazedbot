@@ -34,8 +34,6 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="Самый базированный бот"))
     print(bot.user.name, "в сети!")
 
-async def send_data():
-
 @tasks.loop(hours=1)
 async def neko():
     # cat house
