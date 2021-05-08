@@ -16,6 +16,8 @@ file_cfg.close()
 
 bot.groups = ['-183416023', '-179926480', '-152424758', '-182044990']
 
+bot.cat_house = ''
+
 bot.nekoarchive_previous_link = ''
 bot.nekoarchive_arr = []
 
@@ -36,7 +38,7 @@ async def send_data():
 
 @tasks.loop(hours=1)
 async def neko():
-
+    # cat house
     r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -183416023, "count": 2, "offset": 0,
     "access_token": cfg["vk_token"], "v": "5.130"})
 
@@ -48,6 +50,17 @@ async def neko():
     
     message = await channel.send(image)
     await message.add_reaction(bot.get_emoji(839961477737349150))
+
+    if bot.cat_house == '':
+        bot.cat_house = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+    elif bot.cat_house == image:
+        pass
+    elif bot.cat_house != image:
+        bot.cat_house = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
     
     # nekoarchive
     r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -179926480, "count": 2, "offset": 0,
@@ -75,6 +88,7 @@ async def neko():
             if current_arr == bot.nekoarchive_arr:
                 pass
             else:
+                bot.nekoarchive_arr = current_arr
                 for i in bot.nekoarchive_arr:
                     message = await channel.send(i)
                     await message.add_reaction(bot.get_emoji(839961477737349150))
@@ -118,6 +132,7 @@ async def neko():
             if current_arr == bot.nekochan_heart_arr:
                 pass
             else:
+                bot.nekochan_heart_arr = current_arr
                 for i in bot.nekochan_heart_arr:
                     message = await channel.send(i)
                     await message.add_reaction(bot.get_emoji(839961477737349150))
@@ -162,6 +177,7 @@ async def neko():
             if current_arr == bot.nekochan_meow_arr:
                 pass
             else:
+                bot.nekochan_meow_arr = current_arr
                 for i in bot.nekochan_meow_arr:
                     message = await channel.send(i)
                     await message.add_reaction(bot.get_emoji(839961477737349150))
