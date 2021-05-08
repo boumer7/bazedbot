@@ -29,6 +29,10 @@ bot.nekochan_meow_arr = []
 
 bot.meduza_text = ''
 
+bot.nekomemes = ''
+bot.onlyneko = ''
+bot.nekotyanochki = ''
+
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name="Самый базированный бот"))
@@ -192,7 +196,72 @@ async def neko():
             message = await channel.send(image)
             await message.add_reaction(bot.get_emoji(839961477737349150))
 
+    #nekomemes
 
+    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -198134349, "count": 2, "offset": 0,
+    "access_token": cfg["vk_token"], "v": "5.130"})
+
+    data = r.json()
+    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
+    image = image[1:-1]
+
+    channel = bot.get_channel(839250460522577940)
+    
+    if bot.nekomemes == '':
+        bot.nekomemes = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+    elif bot.nekomemes == image:
+        pass
+    elif bot.nekomemes != image:
+        bot.nekomemes = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+
+    # onlyneko -202553134
+
+    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -202553134, "count": 1, "offset": 0,
+    "access_token": cfg["vk_token"], "v": "5.130"})
+
+    data = r.json()
+    image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+    image = image[1:-1]
+
+    channel = bot.get_channel(839250460522577940)
+    
+    if bot.onlyneko == '':
+        bot.onlyneko = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+    elif bot.onlyneko == image:
+        pass
+    elif bot.onlyneko != image:
+        bot.onlyneko = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+
+    # https://vk.com/tyanochki_nyanochki -198356798
+
+    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -198356798, "count": 2, "offset": 0,
+    "access_token": cfg["vk_token"], "v": "5.130"})
+
+    data = r.json()
+    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
+    image = image[1:-1]
+
+    channel = bot.get_channel(839250460522577940)
+    
+    if bot.nekotyanochki == '':
+        bot.nekotyanochki = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+    elif bot.nekotyanochki == image:
+        pass
+    elif bot.nekotyanochki != image:
+        bot.nekotyanochki = image
+        message = await channel.send(image)
+        await message.add_reaction(bot.get_emoji(839961477737349150))
+    
 @tasks.loop(hours=1)
 async def meduza():
 
@@ -240,7 +309,19 @@ async def yt(ctx, *, query = None):
         r = YoutubeSearch(query, max_results = 1).to_dict()
         await ctx.send("https://youtube.com" + r[0]["url_suffix"])
     else:
-        await ctx.send("Укажите запрос!")
+        await ctx.send("Укажите запрос")
+
+@bot.command()
+async def poll(ctx, *, poll_type = None):
+    if poll_type:
+        if poll_type == 'newtext':
+            ctx.send("Голосование за создание нового текстового канала.")
+        elif poll_type == 'newvoice':
+            ctx.send("Голосование за создание нового голосового канала.")
+        elif poll_type == 'report':
+            ctx.send("Нарушил ли {user} пункт правил №{rule}?".format("пользователь", "правило"))
+    else:
+        await ctx.send("Укажите тип голосования. Для большей информации напишите **/help**")
 
 @bot.command()
 async def joined(ctx, member: discord.Member):
