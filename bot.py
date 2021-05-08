@@ -211,16 +211,16 @@ async def meduza():
     if bot.meduza_text == '':
         bot.meduza_text = news
         message = await channel.send(news)
-        await message.add_reaction(👍)
-        await message.add_reaction(👎)
+        await message.add_reaction('\N{THUMBS UP SIGN}')
+        await message.add_reaction('\N{THUMBS DOWN SIGN}')
 
     elif bot.meduza_text == news:
         pass
     elif bot.meduza_text != news:
         bot.meduza_text = news
         message = await channel.send(news)
-        await message.add_reaction(👍)
-        await message.add_reaction(👎)
+        await message.add_reaction('\N{THUMBS UP SIGN}')
+        await message.add_reaction('\N{THUMBS DOWN SIGN}')
 
 @neko.before_loop
 async def nekosent():
