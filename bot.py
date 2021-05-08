@@ -16,6 +16,7 @@ file_cfg.close()
 
 bot.nekoarchive_previous_link = ''
 bot.nekochan_previous_link = ''
+bot.meduza_text = ''
 
 @bot.event
 async def on_ready():
@@ -91,7 +92,15 @@ async def meduza():
 
     news = json.dumps(data["response"]["items"][1]["text"], ensure_ascii=False)
     news = news[1:-1]
-    await channel.send(news)
+
+    if bot.meduza_text == '':
+        bot.meduza_text = news
+        await channel.send(news)
+    elif bot.meduza_text == news:
+        pass
+    elif bot.meduza_text != news:
+        bot.meduza_text = news
+        await channel.send(news)
 
 @neko.before_loop
 async def nekosent():
