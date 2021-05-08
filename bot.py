@@ -68,9 +68,9 @@ async def neko():
     image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
     image = image[1:-1]
 
-    if len(data["response"]["items"][0]["attachments"]) > 1:
+    if len(data["response"]["items"][1]["attachments"]) > 1:
         if len(bot.nekoarchive_arr) == 0:
-            for i in data["response"]["items"][0]["attachments"]:
+            for i in data["response"]["items"][1]["attachments"]:
                 bot.nekoarchive_arr.append(i["photo"]["sizes"][-1]["url"])
 
             for i in bot.nekoarchive_arr:
@@ -80,7 +80,7 @@ async def neko():
         elif len(bot.nekoarchive_arr) > 0:
             current_arr = []
 
-            for i in data["response"]["items"][0]["attachments"]:
+            for i in data["response"]["items"][1]["attachments"]:
                 current_arr.append(i["photo"]["sizes"][-1]["url"])
 
             if current_arr == bot.nekoarchive_arr:
@@ -92,7 +92,7 @@ async def neko():
                     await message.add_reaction(bot.get_emoji(839961477737349150))
     else:
 
-        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+        image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
         image = image[1:-1]
 
         if bot.nekoarchive_previous_link == '':
@@ -112,9 +112,9 @@ async def neko():
 
     data = r.json()
 
-    if len(data["response"]["items"][0]["attachments"]) > 1:
+    if len(data["response"]["items"][1]["attachments"]) > 1:
         if len(bot.nekochan_heart_arr) == 0:
-            for i in data["response"]["items"][0]["attachments"]:
+            for i in data["response"]["items"][1]["attachments"]:
                 bot.nekochan_heart_arr.append(i["photo"]["sizes"][-1]["url"])
 
             for i in bot.nekochan_heart_arr:
@@ -124,7 +124,7 @@ async def neko():
         elif len(bot.nekochan_heart_arr) > 0:
             current_arr = []
 
-            for i in data["response"]["items"][0]["attachments"]:
+            for i in data["response"]["items"][1]["attachments"]:
                 current_arr.append(i["photo"]["sizes"][-1]["url"])
 
             if current_arr == bot.nekochan_heart_arr:
@@ -136,7 +136,7 @@ async def neko():
                     await message.add_reaction(bot.get_emoji(839961477737349150))
     else:
 
-        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
+        image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
         image = image[1:-1]
 
         if bot.nekochan_previous_link == '':
