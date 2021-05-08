@@ -210,12 +210,17 @@ async def meduza():
 
     if bot.meduza_text == '':
         bot.meduza_text = news
-        await channel.send(news)
+        message = await channel.send(news)
+        await message.add_reaction(👍)
+        await message.add_reaction(👎)
+
     elif bot.meduza_text == news:
         pass
     elif bot.meduza_text != news:
         bot.meduza_text = news
-        await channel.send(news)
+        message = await channel.send(news)
+        await message.add_reaction(👍)
+        await message.add_reaction(👎)
 
 @neko.before_loop
 async def nekosent():
