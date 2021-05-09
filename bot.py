@@ -40,6 +40,7 @@ async def on_ready():
 
 @tasks.loop(hours=1)
 async def neko():
+    
     # cat house
     r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -183416023, "count": 2, "offset": 0,
     "access_token": cfg["vk_token"], "v": "5.130"})
@@ -157,6 +158,9 @@ async def neko():
     "access_token": cfg["vk_token"], "v": "5.130"})
 
     data = r.json()
+
+    with open("data.json", "w") as fl:
+        json.dump(data, fl, indent = 4, ensure_ascii = False)
 
     if len(data["response"]["items"][0]["attachments"]) > 1:
         if len(bot.nekochan_meow_arr) == 0:
@@ -321,11 +325,62 @@ async def poll(ctx, *, poll_type = None):
         elif poll_type == 'report':
             ctx.send("Нарушил ли {user} пункт правил №{rule}?".format("пользователь", "правило"))
     else:
-        await ctx.send("Укажите тип голосования. Для большей информации напишите **/help**")
+        await ctx.send("Укажите тип голосования. Для большей информации напишите **>help**")
 
 @bot.command()
 async def joined(ctx, member: discord.Member):
     await ctx.send(f'{member.name} зашёл на сервер {member.joined_at}')
+
+@bot.command()
+async def help(ctx):
+    help_embed = discord.Embed(title = "Команды", colour = 0xec1622)
+    help_embed.add_field(name = ">poll newtext <название>", value = "Голосование за создание нового текстового канала", inline = False)
+    help_embed.add_field(name = ">poll newvoice <название>", value = "Голосование за создание нового голосового канала", inline = False)
+    help_embed.add_field(name = ">poll report @пользователь <пункт правил>", value = "Пожаловаться на нарушение правил сервера.", inline = False)
+    help_embed.add_field(name = ">yt", value = "Поиск видео по запросу на YouTube", inline = False)
+    await ctx.send(embed = help_embed)
+
+@bot.command()
+async def connect(ctx, *, channel: discord.VoiceChannel=None):
+
+    if not channel:
+        try:
+            channel = ctx.author.voice.channel
+
+        except:
+            await ctx.send("Чтобы я зашёл в голосовой канал, для начала должны зайти вы.")
+
+    vc = ctx.voice_client
+
+    if vc:
+        if vc.channel.id == channel.id:
+            return
+        try:
+            connection = await vc.move_to(channel)
+            if connection:
+                await ctx.send("Я успешно подключился.")
+        except:
+            pass
+    
+    else:
+        try:
+            connection = await channel.connect()
+            if connection:
+                await ctx.send("Я успешно подключился.")
+        except:
+            pass
+
+@bot.command()
+async def leave(ctx):
+    vc = ctx.voice_client
+
+    if not vc or not vc.is_connected():
+        await ctx.send("Я не нахожусь в голосовом канале")
+
+    else:
+        connection = await vc.disconnect()
+        if connection:
+            await ctx.send("Я успешно отключился.")
 
 if __name__ == "__main__":
 
