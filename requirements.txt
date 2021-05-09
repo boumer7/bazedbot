@@ -1,5 +1,6 @@
 discord.py==1.7.0
-requests==2.22.0
 vk_api==11.9.3
 youtube_search==2.1.0
+requests==2.22.0
 discord==1.0.1
+PyNaCl==1.4.0
