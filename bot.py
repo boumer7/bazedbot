@@ -3,8 +3,8 @@ from discord.ext import commands, tasks
 import requests
 import json
 from discord.utils import get
+import urllib.parse
 
-import vk_api
 from youtube_search import YoutubeSearch
 
 bot = commands.Bot(command_prefix='>')
@@ -408,9 +408,25 @@ async def porf(ctx, *, req = None):
     else:
         await ctx.send("Введите запрос")
 
+async def video_id(value):
+    query = urllib.parse.urlparse.urlparse(value)
+    if query.hostname == 'youtu.be':
+        return query.path[1:]
+    if query.hostname in ('www.youtube.com', 'youtube.com'):
+        if query.path == '/watch':
+            p = urllib.parse.urlparse.parse_qs(query.query)
+            return p['v'][0]
+        if query.path[:7] == '/embed/':
+            return query.path.split('/')[2]
+        if query.path[:3] == '/v/':
+            return query.path.split('/')[2]
+    return None
+
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
-    if yt_url:
+    vid_id = video_id(yt_url)
+
+    if yt_url and vid_id:
         r = requests.post('https://w2g.tv/rooms/create.json', 
         json = {
         "w2g_api_key": cfg["w2g"],
@@ -423,7 +439,8 @@ async def newroom(ctx, *, yt_url = None):
             room_link = f"https://w2g.tv/rooms/{streamkey}"
 
             w2g_embed = discord.Embed(title="Ваша комнате создана!", color=0xec1622)
-            w2g_embed.add_field(name="", value=f'[Перейти]({room_link})', inline=False)
+            w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
+            w2g_embed.set_thumbnail(url = f"http://img.youtube.com/vi/{vid_id}/hqdefault.jpg")   
             await ctx.send(embed=w2g_embed)
         else:
             await ctx.send(f"Ошибка запроса: {r.status_code}")
