@@ -418,7 +418,15 @@ async def newroom(ctx, *, yt_url = None):
         "bg_color": "#EC1622",
         "bg_opacity": "50"})
 
-        await ctx.send(r.json())
+        if r:
+            streamkey = r.json()["streamkey"]
+            room_link = f"https://w2g.tv/rooms/{streamkey}"
+
+            w2g_embed = discord.Embed(title="Ваша комнате создана!", color=0xec1622)
+            w2g_embed.add_field(name="Field1", value=f'[Перейти]({room_link})', inline=False)
+            await ctx.send(embed=w2g_embed)
+        else:
+            await ctx.send(f"Ошибка запроса: {r.status_code}")
     else:
         await ctx.send("Введите ссылку на YouTube")
 
