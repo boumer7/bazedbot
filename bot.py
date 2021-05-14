@@ -385,7 +385,10 @@ async def leave(ctx):
 async def porf(ctx, *, req = None):
     if req:
         r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30})
-        await ctx.send(r.json())
+        if r:
+            await ctx.send(req, r.json()['replies'][0])
+        else:
+            await ctx.send('Слишком много запросов')
     else:
         await ctx.send("Введите запрос")
 
