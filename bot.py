@@ -381,7 +381,7 @@ async def leave(ctx):
         await vc.disconnect()
         await ctx.send("Я успешно отключился.")
 
-@bot.commmand(aliases=['дополнить', 'продолжить', 'continue', 'con', 'porfirevich'])
+@bot.command(aliases=['дополнить', 'продолжить', 'continue', 'con', 'porfirevich'])
 async def porf(ctx, *, req = None):
     if req:
         r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30})
