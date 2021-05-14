@@ -3,7 +3,6 @@ from discord.ext import commands, tasks
 import requests
 import json
 from discord.utils import get
-import urllib.parse
 
 from youtube_search import YoutubeSearch
 
@@ -408,23 +407,16 @@ async def porf(ctx, *, req = None):
     else:
         await ctx.send("Введите запрос")
 
-async def video_id(value):
-    query = urllib.parse.urlparse.urlparse(value)
-    if query.hostname == 'youtu.be':
-        return query.path[1:]
-    if query.hostname in ('www.youtube.com', 'youtube.com'):
-        if query.path == '/watch':
-            p = urllib.parse.urlparse.parse_qs(query.query)
-            return p['v'][0]
-        if query.path[:7] == '/embed/':
-            return query.path.split('/')[2]
-        if query.path[:3] == '/v/':
-            return query.path.split('/')[2]
+async def video_id(url):
+    if 'youtube.com' in url or 'youtu.be' in url:
+            return url[-11:-1]
     return None
 
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
-    vid_id = await video_id(yt_url)
+    
+    vid_id = video_id(yt_url)
+    await ctx.send(vid_id)
 
     if yt_url and vid_id:
         r = requests.post('https://w2g.tv/rooms/create.json', 
