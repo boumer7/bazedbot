@@ -378,12 +378,19 @@ async def leave(ctx):
         await ctx.send("Я не нахожусь в голосовом канале")
 
     else:
-        connection = await vc.disconnect()
-        if connection:
-            await ctx.send("Я успешно отключился.")
+        await vc.disconnect()
+        await ctx.send("Я успешно отключился.")
+
+@bot.commmand(aliases=['дополнить', 'продолжить', 'continue', 'con', 'porfirevich'])
+async def porf(ctx, *, req = None):
+    if req:
+        r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30})
+        await ctx.send(r.json())
+    else:
+        await ctx.send("Введите запрос")
 
 if __name__ == "__main__":
 
-    meduza.start()
-    neko.start()
+    # meduza.start()
+    # neko.start()
     bot.run(cfg["token"])
