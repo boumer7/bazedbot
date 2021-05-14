@@ -414,8 +414,8 @@ async def video_id(url):
 
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
-    
-    vid_id = video_id(yt_url)
+
+    vid_id = await video_id(yt_url)
     await ctx.send(vid_id)
 
     if yt_url and vid_id:
