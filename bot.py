@@ -383,8 +383,26 @@ async def leave(ctx):
 
 @bot.command(aliases=['дополнить', 'продолжить', 'continue', 'con', 'porfirevich'])
 async def porf(ctx, *, req = None):
+    headers = {
+    'Accept': '*/*',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'en-US,en;q=0.9',
+    'Connection': 'keep-alive',
+    'Content-Length': '50',
+    'Content-Type': 'text/plain;charset=UTF-8',
+    'dnt': '1',
+    'Host': 'pelevin.gpt.dobro.ai',
+    'Origin': 'https://porfirevich.ru',
+    'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="90", "Google Chrome";v="90"',
+    'sec-ch-ua-mobile': '?0',
+    'Sec-Fetch-Dest': 'empty',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'cross-site',
+    'sec-gpc': '1',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36'
+    }
     if req:
-        r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30})
+        r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30}, headers = headers)
         if r:
             await ctx.send(f"{req} {r.json()['replies'][0]}")
         else:
