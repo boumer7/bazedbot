@@ -424,7 +424,7 @@ async def video_id(value):
 
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
-    vid_id = video_id(yt_url)
+    vid_id = await video_id(yt_url)
 
     if yt_url and vid_id:
         r = requests.post('https://w2g.tv/rooms/create.json', 
