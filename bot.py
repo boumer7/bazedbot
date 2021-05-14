@@ -432,7 +432,7 @@ async def newroom(ctx, *, yt_url = None):
 
             w2g_embed = discord.Embed(title="Ваша комнате создана!", color=0xec1622)
             w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
-            w2g_embed.set_image(url = f"http://img.youtube.com/vi/{vid_id}/hqdefault.jpg")   
+            w2g_embed.set_image(url = f"https://img.youtube.com/vi/{vid_id}/0.jpg")   
             await ctx.send(embed=w2g_embed)
         else:
             await ctx.send(f"Ошибка запроса: {r.status_code}")
