@@ -406,7 +406,7 @@ async def porf(ctx, *, req = None):
         if r:
             await ctx.send(f"{req} {r.json()['replies'][0]}")
         else:
-            await ctx.send('Слишком много запросов')
+            await ctx.send(f'Слишком много запросов: {r.status_code}')
     else:
         await ctx.send("Введите запрос")
 
