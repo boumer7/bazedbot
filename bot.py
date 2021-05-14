@@ -411,7 +411,7 @@ async def porf(ctx, *, req = None):
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
     if yt_url:
-        r = requets.post('https://w2g.tv/rooms/create.json', 
+        r = requests.post('https://w2g.tv/rooms/create.json', 
         json = {
         "w2g_api_key": cfg["w2g"],
         "share": yt_url,
