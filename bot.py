@@ -6,7 +6,7 @@ from discord.utils import get
 
 from youtube_search import YoutubeSearch
 
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 
 bot = commands.Bot(command_prefix='>')
 bot.remove_command("help")
@@ -410,8 +410,16 @@ async def porf(ctx, *, req = None):
         await ctx.send("Введите запрос")
 
 async def video_id(url):
-    url_data = urlparse(url)
-    return url_data.query[2::]
+    query = urlparse(url)
+    if query.hostname == 'youtu.be': return query.path[1:]
+    if query.hostname in {'www.youtube.com', 'youtube.com'}:
+        if query.path == '/watch': return parse_qs(query.query)['v'][0]
+        if query.path[:7] == '/watch/': return query.path.split('/')[1]
+        if query.path[:7] == '/embed/': return query.path.split('/')[2]
+        if query.path[:3] == '/v/': return query.path.split('/')[2]
+        if query.path[:9] == '/playlist': return parse_qs(query.query)['list'][0]
+
+    return None
 
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
@@ -430,7 +438,7 @@ async def newroom(ctx, *, yt_url = None):
             streamkey = r.json()["streamkey"]
             room_link = f"https://w2g.tv/rooms/{streamkey}"
 
-            w2g_embed = discord.Embed(title="Ваша комнате создана!", color=0xec1622)
+            w2g_embed = discord.Embed(title="Ваша комнате в Watch2Gether создана!", color=0xec1622)
             w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
             w2g_embed.set_image(url = f"https://img.youtube.com/vi/{vid_id}/0.jpg")   
             await ctx.send(embed=w2g_embed)
