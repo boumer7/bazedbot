@@ -404,7 +404,7 @@ async def porf(ctx, *, req = None):
     if req:
         r = requests.post('https://pelevin.gpt.dobro.ai/generate/', json = {"prompt": req, "length":30}, headers = headers)
         if r:
-            await ctx.send(f"{req} {r.json()['replies'][0]}")
+            await ctx.send(f"{req}{r.json()['replies'][0]}")
         else:
             await ctx.send(f'Слишком много запросов: {r.status_code}')
     else:
