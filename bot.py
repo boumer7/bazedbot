@@ -159,9 +159,6 @@ async def neko():
 
     data = r.json()
 
-    with open("data.json", "w") as fl:
-        json.dump(data, fl, indent = 4, ensure_ascii = False)
-
     if len(data["response"]["items"][0]["attachments"]) > 1:
         if len(bot.nekochan_meow_arr) == 0:
             for i in data["response"]["items"][0]["attachments"]:
@@ -410,6 +407,20 @@ async def porf(ctx, *, req = None):
             await ctx.send(f'Слишком много запросов: {r.status_code}')
     else:
         await ctx.send("Введите запрос")
+
+@bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
+async def newroom(ctx, *, yt_url = None):
+    if yt_url:
+        r = requets.post('https://w2g.tv/rooms/create.json', 
+        json = {
+        "w2g_api_key": cfg["w2g"],
+        "share": yt_url,
+        "bg_color": "#EC1622",
+        "bg_opacity": "50"})
+
+        await ctx.send(r.json())
+    else:
+        await ctx.send("Введите ссылку на YouTube")
 
 if __name__ == "__main__":
 
