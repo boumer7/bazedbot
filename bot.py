@@ -6,6 +6,8 @@ from discord.utils import get
 
 from youtube_search import YoutubeSearch
 
+from urllib.parse import urlparse
+
 bot = commands.Bot(command_prefix='>')
 bot.remove_command("help")
 
@@ -408,9 +410,8 @@ async def porf(ctx, *, req = None):
         await ctx.send("Введите запрос")
 
 async def video_id(url):
-    if 'youtube.com' in url or 'youtu.be' in url:
-            return url[-11:-1]
-    return None
+    url_data = urlparse(url)
+    return url_data.query[2::]
 
 @bot.command(aliases=['комната', 'room', 'nr', 'w2g', 'watch2gether'])
 async def newroom(ctx, *, yt_url = None):
