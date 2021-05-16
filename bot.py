@@ -15,254 +15,27 @@ file_cfg = open("token.json")
 cfg = json.load(file_cfg)
 file_cfg.close()
 
-bot.groups = ['-183416023', '-179926480', '-152424758', '-182044990']
-
-bot.cat_house = ''
-
-bot.nekoarchive_previous_link = ''
-bot.nekoarchive_arr = []
-
-bot.nekochan_previous_link = ''
-bot.nekochan_heart_arr = []
-
-bot.nekochan_meow = ''
-bot.nekochan_meow_arr = []
-
 bot.meduza_text = ''
-
-bot.nekomemes = ''
-bot.onlyneko = ''
-bot.nekotyanochki = ''
+bot.offset = 300
 
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name="Самый базированный бот"))
     print(bot.user.name, "в сети!")
 
-@tasks.loop(hours=1)
-async def neko():
-    
+@tasks.loop(seconds = 30)
+async def neko(ctx):
     # cat house
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -183416023, "count": 2, "offset": 0,
+    r = requests.get("https://api.vk.com/method/photos.get", 
+    params = {"owner_id": -21674355, "album_id": "wall", "count": 10, "offset": bot.offset,
     "access_token": cfg["vk_token"], "v": "5.130"})
 
-    data = r.json()
-    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
+    if r:
+        data = r.json()
+        with open('data.json', 'w', encoding = 'utf-8') as fl:
+            json.dump(data, fl, indent = 4, ensure_ascii= False)
 
-    channel = bot.get_channel(839250460522577940)
-    
-    if bot.cat_house == '':
-        bot.cat_house = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.cat_house == image:
-        pass
-    elif bot.cat_house != image:
-        bot.cat_house = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    
-    # nekoarchive
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -179926480, "count": 2, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
-
-    if len(data["response"]["items"][1]["attachments"]) > 1:
-        if len(bot.nekoarchive_arr) == 0:
-            for i in data["response"]["items"][1]["attachments"]:
-                bot.nekoarchive_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            for i in bot.nekoarchive_arr:
-                message = await channel.send(i)
-                await message.add_reaction(bot.get_emoji(839961477737349150))
-
-        elif len(bot.nekoarchive_arr) > 0:
-            current_arr = []
-
-            for i in data["response"]["items"][1]["attachments"]:
-                current_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            if current_arr == bot.nekoarchive_arr:
-                pass
-            else:
-                bot.nekoarchive_arr = current_arr
-                for i in bot.nekoarchive_arr:
-                    message = await channel.send(i)
-                    await message.add_reaction(bot.get_emoji(839961477737349150))
-    else:
-
-        image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-        image = image[1:-1]
-
-        if bot.nekoarchive_previous_link == '':
-            bot.nekoarchive_previous_link = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-        elif bot.nekoarchive_previous_link == image:
-            pass
-        elif bot.nekoarchive_previous_link != image:
-            bot.nekoarchive_previous_link = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-
-    # nekochan <3
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -152424758, "count": 2, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-
-    if len(data["response"]["items"][1]["attachments"]) > 1:
-        if len(bot.nekochan_heart_arr) == 0:
-            for i in data["response"]["items"][1]["attachments"]:
-                bot.nekochan_heart_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            for i in bot.nekochan_heart_arr:
-                message = await channel.send(i)
-                await message.add_reaction(bot.get_emoji(839961477737349150))
-
-        elif len(bot.nekochan_heart_arr) > 0:
-            current_arr = []
-
-            for i in data["response"]["items"][1]["attachments"]:
-                current_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            if current_arr == bot.nekochan_heart_arr:
-                pass
-            else:
-                bot.nekochan_heart_arr = current_arr
-                for i in bot.nekochan_heart_arr:
-                    message = await channel.send(i)
-                    await message.add_reaction(bot.get_emoji(839961477737349150))
-    else:
-
-        image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-        image = image[1:-1]
-
-        if bot.nekochan_previous_link == '':
-            bot.nekochan_previous_link = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-        elif bot.nekochan_previous_link == image:
-            pass
-        elif bot.nekochan_previous_link != image:
-            bot.nekochan_previous_link = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-
-    # -182044990 nekochan_meow
-
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -182044990, "count": 1, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-
-    if len(data["response"]["items"][0]["attachments"]) > 1:
-        if len(bot.nekochan_meow_arr) == 0:
-            for i in data["response"]["items"][0]["attachments"]:
-                bot.nekochan_meow_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            for i in bot.nekochan_meow_arr:
-                message = await channel.send(i)
-                await message.add_reaction(bot.get_emoji(839961477737349150))
-
-        elif len(bot.nekochan_meow_arr) > 0:
-            current_arr = []
-
-            for i in data["response"]["items"][0]["attachments"]:
-                current_arr.append(i["photo"]["sizes"][-1]["url"])
-
-            if current_arr == bot.nekochan_meow_arr:
-                pass
-            else:
-                bot.nekochan_meow_arr = current_arr
-                for i in bot.nekochan_meow_arr:
-                    message = await channel.send(i)
-                    await message.add_reaction(bot.get_emoji(839961477737349150))
-    else:
-
-        image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
-        image = image[1:-1]
-
-        if bot.nekochan_meow == '':
-            bot.nekochan_meow = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-        elif bot.nekochan_meow == image:
-            pass
-        elif bot.nekochan_meow != image:
-            bot.nekochan_meow = image
-            message = await channel.send(image)
-            await message.add_reaction(bot.get_emoji(839961477737349150))
-
-    #nekomemes
-
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -198134349, "count": 2, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
-
-    channel = bot.get_channel(839250460522577940)
-    
-    if bot.nekomemes == '':
-        bot.nekomemes = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.nekomemes == image:
-        pass
-    elif bot.nekomemes != image:
-        bot.nekomemes = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-
-    # onlyneko -202553134
-
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -202553134, "count": 1, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-    image = json.dumps(data["response"]["items"][0]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
-
-    channel = bot.get_channel(839250460522577940)
-    
-    if bot.onlyneko == '':
-        bot.onlyneko = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.onlyneko == image:
-        pass
-    elif bot.onlyneko != image:
-        bot.onlyneko = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-
-    # https://vk.com/tyanochki_nyanochki -198356798
-
-    r = requests.get("https://api.vk.com/method/wall.get", params = {"owner_id": -198356798, "count": 2, "offset": 0,
-    "access_token": cfg["vk_token"], "v": "5.130"})
-
-    data = r.json()
-    image = json.dumps(data["response"]["items"][1]["attachments"][0]["photo"]["sizes"][-1]["url"])
-    image = image[1:-1]
-
-    channel = bot.get_channel(839250460522577940)
-    
-    if bot.nekotyanochki == '':
-        bot.nekotyanochki = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
-    elif bot.nekotyanochki == image:
-        pass
-    elif bot.nekotyanochki != image:
-        bot.nekotyanochki = image
-        message = await channel.send(image)
-        await message.add_reaction(bot.get_emoji(839961477737349150))
+    # channel = bot.get_channel(839250460522577940)
     
 @tasks.loop(hours=1)
 async def meduza():
@@ -293,10 +66,10 @@ async def meduza():
         await message.add_reaction('\N{THUMBS UP SIGN}')
         await message.add_reaction('\N{THUMBS DOWN SIGN}')
 
-@neko.before_loop
-async def nekosent():
-    await bot.wait_until_ready()
-    print("Neko sent!")
+#@neko.before_loop
+#async def nekosent():
+#    await bot.wait_until_ready()
+#    print("Neko sent!")
 
 @meduza.before_loop
 async def newssent():
@@ -426,26 +199,48 @@ async def newroom(ctx, *, yt_url = None):
 
     vid_id = await video_id(yt_url)
 
-    if yt_url and vid_id:
-        r = requests.post('https://w2g.tv/rooms/create.json', 
-        json = {
-        "w2g_api_key": cfg["w2g"],
-        "share": yt_url,
-        "bg_color": "#EC1622",
-        "bg_opacity": "50"})
+    if yt_url:
 
-        if r:
-            streamkey = r.json()["streamkey"]
-            room_link = f"https://w2g.tv/rooms/{streamkey}"
+        if vid_id:
+            r = requests.post('https://w2g.tv/rooms/create.json', 
+            json = {
+            "w2g_api_key": cfg["w2g"],
+            "share": yt_url,
+            "bg_color": "#EC1622",
+            "bg_opacity": "50"})
 
-            w2g_embed = discord.Embed(title="Ваша комнате в Watch2Gether создана!", color=0xec1622)
-            w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
-            w2g_embed.set_image(url = f"https://img.youtube.com/vi/{vid_id}/0.jpg")   
-            await ctx.send(embed=w2g_embed)
+            if r:
+                streamkey = r.json()["streamkey"]
+                room_link = f"https://w2g.tv/rooms/{streamkey}"
+
+                w2g_embed = discord.Embed(title="Ваша комната в Watch2Gether создана!", color=0xec1622)
+                w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
+                w2g_embed.set_image(url = f"https://img.youtube.com/vi/{vid_id}/0.jpg")   
+                await ctx.send(embed=w2g_embed)
+            else:
+                await ctx.send(f"Ошибка запроса: {r.status_code}")
+
         else:
-            await ctx.send(f"Ошибка запроса: {r.status_code}")
+            r = requests.post('https://w2g.tv/rooms/create.json', 
+            json = {
+            "w2g_api_key": cfg["w2g"],
+            "share": yt_url,
+            "bg_color": "#EC1622",
+            "bg_opacity": "50"})
+
+            if r:
+                streamkey = r.json()["streamkey"]
+                room_link = f"https://w2g.tv/rooms/{streamkey}"
+
+                w2g_embed = discord.Embed(title="Ваша комната в Watch2Gether создана!", color=0xec1622)
+                w2g_embed.add_field(name="Комната", value=f'[Перейти]({room_link})', inline=False)
+                await ctx.send(embed=w2g_embed)
+            else:
+                await ctx.send(f"Ошибка запроса: {r.status_code}")
+
+        
     else:
-        await ctx.send("Введите ссылку на YouTube")
+        await ctx.send("Введите запрос для Watch2Gether. Поддерживаемые сервисы.")
 
 if __name__ == "__main__":
 
