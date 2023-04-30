@@ -1,7 +1,9 @@
 # bazedbot
 
 <h2>Локальный бот для нашего Discord-сервера</h2>
-С функциями:
+
+С возможностями:
+
 - Отправки аниме (некочанов) фоток из группы ВКонтакте;
 - С отправкой постов из паблика Neural Meduza ВКонтакте;
 - Поиском по YouTube по названию ролика;
@@ -10,6 +12,7 @@
 - Созданием комнаты в Watch2gether
 
 With functions:
+
 - Sending anime (nekochan) photos from the group VKontakte;
 - With the sending of posts from the Neural Meduza group VK;
 - YouTube search by video title;
